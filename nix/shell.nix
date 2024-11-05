@@ -4,20 +4,19 @@
     config,
     ...
   }: let
+    attrs = (import ./vm-config/attrs.nix) pkgs;
   in {
     devShells.default = pkgs.mkShell {
-      packages = with pkgs; [
-        meson
-        ninja
-        dpdk # 23.11
-        pkg-config
+      packages = with pkgs;
+        [
+          qemu_kvm
+          numactl
+        ]
+        ++ attrs.pkgs;
 
-        qemu_kvm
-        libvirt
-        numactl
-
-        # config.packages.dpdk-vm-run
-      ];
+      shellHook = ''
+        export LIBVIRT_DEFAULT_URI="qemu:///system"
+      '';
     };
   };
 }
