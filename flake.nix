@@ -38,7 +38,6 @@
         ./nix/virt-scripts.nix
       ];
 
-      flake = {};
       systems = nixpkgs.lib.systems.flakeExposed;
     };
 }

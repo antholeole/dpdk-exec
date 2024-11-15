@@ -5,6 +5,7 @@
     ...
   }: {
     packages.nixos-qcow2 = let
+      network-interface-name = "enp1s0";
       attrs = (import ./vm-config/attrs.nix) pkgs;
       configuration = {...}: let
         dpdk-user-pwd = "hunter2";
@@ -24,7 +25,7 @@
             "console=ttyS0,115200"
             "transparent_hugepage=never"
             "hugepagesz=2MB"
-            "hugepages=128"
+            "hugepages=256"
             "vfio.enable_unsafe_noiommu_mode=1"
           ];
           kernelModules = [
@@ -69,6 +70,19 @@
           };
         in
           {
+            setup-devices = {
+              wantedBy = ["multi-user.target"];
+              bindsTo = ["sys-devices-pci0000:00-0000:00:01.0-0000:01:00.0-virtio0-net-${network-interface-name}.device"];
+              path = with pkgs; [
+                pciutils
+                busybox
+              ];
+              serviceConfig.ExecStart = let
+                devbind = pkgs.writeShellScriptBin "setup-devices-unwrapped" ''
+                  ${pkgs.dpdk}/bin/dpdk-devbind.py -b vfio-pci 0000:0b:00.0 0000:0c:00.0
+                '';
+              in "${devbind}/bin/setup-devices-unwrapped";
+            };
           }
           // (mk-serial-tty 0)
           // (mk-serial-tty 1);
@@ -81,6 +95,7 @@
 
             # temp
             lsof
+            pciutils
           ];
 
         networking = {
@@ -88,7 +103,7 @@
           useDHCP = false;
           useNetworkd = false;
           enableIPv6 = false;
-          interfaces.enp1s0.useDHCP = true;
+          interfaces.${network-interface-name}.useDHCP = true;
         };
 
         services = {

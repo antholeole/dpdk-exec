@@ -14,7 +14,7 @@
     packages = {
       setup-hugepages = let
         hugepageSize = 2048;
-        hugepageNum = 1024;
+        hugepageNum = 1536;
       in
         pkgs.writeShellScriptBin "setup-hugepages" ''
           set -euo pipefail
@@ -33,7 +33,7 @@
         '';
 
       testpmd = pkgs.writeShellScriptBin "testpmd" ''
-        sudo ${pkgs.dpdk}/bin/dpdk-testpmd -l 0,2 --socket-mem=512 -n 3 \
+        sudo ${pkgs.dpdk}/bin/dpdk-testpmd -l 2,3 --socket-mem=256 -n 2 \
             --vdev 'net_vhost0,iface=/tmp/vhost-user1' \
             --vdev 'net_vhost1,iface=/tmp/vhost-user2' -- \
             --portmask=f -i --rxq=1 --txq=1 \

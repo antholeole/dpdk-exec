@@ -43,7 +43,7 @@ with nixvirt.lib; let
       name = "Penguin";
       uuid = "cc7439ed-36af-4696-a6f2-1f0c4474d87e";
       memory = {
-        count = 1;
+        count = 8;
         unit = "GiB";
       };
       storage_vol = {
@@ -95,7 +95,7 @@ with nixvirt.lib; let
         numa.cell = {
           id = "0";
           cpus = "0-2";
-          memory = 512;
+          memory = 1024;
           unit = "MiB";
           memAccess = "shared";
         };

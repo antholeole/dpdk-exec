@@ -6,7 +6,7 @@ P2300 over DPDK
 
 1. `nix run .#setup-hugepages`
 1. begin the dpdk testpmd command with `nix run .#test-pmd` (needed to create the fake NIC sockets)
-1. start the VM with `nix run .#runvirt --  active`
+1. start the VM with `nix run .#runvirt --  active` (note: you may need `TMPDIR=/tmp`, since builds are defaulted to `$XDG_RUNTIME_DIR` which is much smaller and may cause disk space issues.)
 2. 
 
 

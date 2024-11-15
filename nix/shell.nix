@@ -12,7 +12,7 @@
           qemu_kvm
           numactl
         ]
-        ++ attrs.pkgs;
+        ++ attrs.devPkgs;
 
       shellHook = ''
         export LIBVIRT_DEFAULT_URI="qemu:///system"
